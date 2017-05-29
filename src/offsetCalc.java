@@ -18,50 +18,53 @@ public class offsetCalc {
 	// New Max length is 81120.
 	// System.out.println("L"+out.length());
 
-	static ArrayList<Byte> byteOut = new ArrayList();
-	static String out = "";
+	static ArrayList<Byte> byteOut = new ArrayList<Byte>();
+	// String that will be initialized with the alphabet we will be inserting.
+	static String outString = "";
 
 	public static void main(String[] args) {
 		Scanner stdin = new Scanner(System.in);
 		System.out.print("Requested number of characters\n>> ");
-		int off = stdin.nextInt();
+		// Number of characters to output
+		int outNum = stdin.nextInt();
 		for (int i = 0; i < alph1.length; i++) {
 			for (int j = 0; j < alph2.length; j++) {
 				for (int k = 0; k < alph3.length; k++) {
-					out += (alph1[i] + "" + alph2[j] + "" + alph3[k] + "");
+					outString += (alph1[i] + "" + alph2[j] + "" + alph3[k] + "");
 					/*
 					 * for (Byte e : (alph1[i] + "" + alph2[j] + "" + alph3[k] +
 					 * "").getBytes()) { byteOut.add(e);
 					 * System.out.print(e.intValue()+"1"); }
 					 */
-					if(out.length() >= off){
+					if (outString.length() >= outNum) {
 						break;
 					}
 				}
 			}
 		}
 		System.out.println();
-		System.out.println(out.substring(0, off));
+		System.out.println(outString.substring(0, outNum));
 		// Big Ordering Creation
 		String BEOrder = "";
-		for (Byte t : out.substring(0, off).getBytes()) {
+		for (Byte t : outString.substring(0, outNum).getBytes()) {
 			BEOrder += ("" + Integer.toHexString(t));
 		}
 		// Little Ordering Creation
+		BEOrder = BEOrder.toLowerCase();
 		String LEOrder = "";
-		Boolean isOdd = false;
-		for (Byte t : out.substring(0, off).getBytes()) {
+		for (Byte t : outString.substring(0, outNum).getBytes()) {
 			LEOrder += (Integer.toHexString(t));
 		}
 		// Convert from BE to LE.
-		LEOrder = reverseHex(LEOrder);
-
+		LEOrder = reverseHex(LEOrder).toLowerCase();
+		
 		System.out.print("\nEnter the EIP pointer. \n>> ");
 		stdin.nextLine();
-		String EIP = stdin.nextLine();
+		String EIP = stdin.nextLine().toLowerCase();
 		// Turns out, Java loves being useful for once in its life.
-		System.out.println("Little-Endian Offset  " + ((off - LEOrder.indexOf(EIP) / 2) - 4));
-		System.out.println("Big-Endian Offset     " + ((off - BEOrder.indexOf(EIP) / 2) - 4));
+		System.out.println("Little-Endian Offset  " + ((outNum - LEOrder.indexOf(EIP) / 2) - 4));
+		System.out.println("Big-Endian Offset     " + ((outNum - BEOrder.indexOf(EIP) / 2) - 4));
+		stdin.close();
 	}
 
 	public static String reverseHex(String originalHex) {
